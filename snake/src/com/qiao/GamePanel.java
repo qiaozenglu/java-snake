@@ -51,9 +51,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         foody = 75 + 25 * random.nextInt(24);
         score = 0;
     }
-
+    //页面
     @Override
     protected void paintComponent(Graphics g) {
+        System.out.println("页面");
         super.paintComponent(g);//清屏
         this.setBackground(Color.BLACK);//设置背景颜色
         Data.header.paintIcon(this, g, 25, 11);
@@ -61,22 +62,19 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         //画一条静态的小蛇
         if (fx.equals("R")) {
             Data.right.paintIcon(this, g, snakeX[0], snakeY[0]);
-
         } else if (fx.equals("L")) {
             Data.left.paintIcon(this, g, snakeX[0], snakeY[0]);
-
         } else if (fx.equals("U")) {
             Data.up.paintIcon(this, g, snakeX[0], snakeY[0]);
-
         } else if (fx.equals("D")) {
             Data.down.paintIcon(this, g, snakeX[0], snakeY[0]);
-
         }
         //        Data.body.paintIcon(this,g,snakeX[1],snakeY[1]);
 //        Data.body.paintIcon(this,g,snakeX[2],snakeY[2]);
         for (int i = 1; i < lenth; i++) {
             Data.body.paintIcon(this, g, snakeX[i], snakeY[i]);
         }
+
         //画积分
         g.setColor(Color.white);
         g.setFont(new Font("微软雅黑", Font.BOLD, 18));
@@ -102,6 +100,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     @Override
     public void keyPressed(KeyEvent e) {
         //获取按下的键盘是那个键
+        System.out.println("键盘");
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_SPACE) {
             if (isFail) {
@@ -110,18 +109,38 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             } else {
                 isStart = !isStart;
             }
-
             repaint();
         }
+
         //键盘控制方向
         if (keyCode == KeyEvent.VK_LEFT) {
-            fx = "L";
+            if(fx=="R"){
+                return;
+            }else{
+                fx = "L";
+            }
         } else if (keyCode == KeyEvent.VK_RIGHT) {
-            fx = "R";
+
+            if(fx=="L"){
+                return;
+            }else{
+                fx = "R";
+            }
+
         } else if (keyCode == KeyEvent.VK_UP) {
-            fx = "U";
+
+            if(fx=="D"){
+                return;
+            }else{
+                fx = "U";
+            }
         } else if (keyCode == KeyEvent.VK_DOWN) {
-            fx = "D";
+
+            if(fx=="U"){
+                return;
+            }else{
+                fx = "D";
+            }
         }
 
     }
@@ -130,6 +149,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         //如果游戏处于开始状态,并且游戏没有结束
+        System.out.println("定时器");
         if (isStart && isFail == false) {
             //右移
             for (int i = lenth - 1; i > 0; i--) {
@@ -168,6 +188,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             //结束判断
             for (int i = 1; i < lenth; i++) {
                 if (snakeX[0] == snakeX[i] && snakeY[0] == snakeY[i]) {
+                    isFail = true;
+                }
+                if (snakeX[0] == 25 || snakeX[0] == 850 || snakeY[0] == 75 || snakeY[0] == 650) {
                     isFail = true;
                 }
             }
